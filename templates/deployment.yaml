@@ -80,15 +80,15 @@ spec:
 {{- else }}
           claimName: {{ .Values.persistence.claimName }}
 {{- end }}
-    {{- range $key, $value := .Values.nodeSelector }}
-    nodeSelector:
-      {{ $key }}: {{ $value | quote }}
-    {{- end }}
-    {{- with .Values.affinity }}
-    affinity:
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
-    tolerations:
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
+      {{- range $key, $value := .Values.nodeSelector }}
+      nodeSelector:
+        {{ $key }}: {{ $value | quote }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
