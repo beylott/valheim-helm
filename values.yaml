@@ -28,6 +28,24 @@ valheimServer:
   restartCron: "0 5 * * *"
   timezone: UTC
 
+deployment:
+  env:
+    []
+    # - name: VARIABLE
+    #   value: my-value
+  labels: {}
+  annotations: {}
+
+# affinity:
+#   nodeAffinity:
+#     requiredDuringSchedulingIgnoredDuringExecution:
+#       nodeSelectorTerms:
+#       - matchExpressions:
+#         - key: topology.kubernetes.io/zone
+#           operator: In
+#           values:
+#           - example
+
 persistence:
   config:
     enabled: true

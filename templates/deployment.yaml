@@ -2,11 +2,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "valheim.fullname" . }}
+  annotations:
+    {{- if .Values.deployment.annotations }}
+    {{- toYaml .Values.deployment.annotations | nindent 4 }}
+    {{- end }}
   labels:
-    app: {{ template "valheim.fullname" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
-    heritage: "{{ .Release.Service }}"
+    {{- include "valheim.labels" . | nindent 4 }}
+    {{- if .Values.deployment.labels }}
+    {{- toYaml .Values.deployment.labels | nindent 4 }}
+    {{- end }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -50,6 +54,10 @@ spec:
           value: {{ .Values.valheimServer.restartCron | quote }}
         - name: UPDATE_CRON
           value: {{ .Values.valheimServer.updateCron | quote }}
+        {{- if .Values.deployment.env }}
+        {{- toYaml .Values.deployment.env | nindent 12 }}
+        {{- end }}
+
 
         ports:
         - name: valheim-1
@@ -72,3 +80,15 @@ spec:
 {{- else }}
           claimName: {{ .Values.persistence.claimName }}
 {{- end }}
+    {{- range $key, $value := .Values.nodeSelector }}
+    nodeSelector:
+      {{ $key }}: {{ $value | quote }}
+    {{- end }}
+    {{- with .Values.affinity }}
+    affinity:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+    tolerations:
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
